@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
         // If this circle overlaps any collider on the "Ground" layer, player is grounded.
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
+        Debug.Log($"IsGrounded: {isGrounded}, Can Jump: {isGrounded && Input.GetButtonDown("Jump")}");
+
         // --- Jump ---
         // If player is grounded AND the Jump button (Spacebar by default) is pressed:
         if (isGrounded && Input.GetButtonDown("Jump"))

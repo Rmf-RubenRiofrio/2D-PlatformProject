@@ -1,30 +1,41 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class MovingPlatform : MonoBehaviour
-
-
 {
-    public float distance = 3f;   // how far to move left/right
-    public float speed = 2f;      // movement speed
-
+    public float distance = 3f;
+    public float speed = 2f;
     private Vector3 startPos;
     private int direction = 1;
+    private Vector3 lastPosition;
+    private List<Transform> passengersOnPlatform = new List<Transform>();
 
     void Start()
     {
-        // remember the starting position
         startPos = transform.position;
+        lastPosition = transform.position;
     }
 
     void Update()
     {
-        // move platform along X axis
-        transform.Translate(Vector3.right * direction * speed * Time.deltaTime);
+        // Calculate movement
+        Vector3 movement = Vector3.right * direction * speed * Time.deltaTime;
+        transform.Translate(movement);
 
-        // check distance from start
+        // Move passengers
+        foreach (Transform passenger in passengersOnPlatform)
+        {
+            if (passenger != null)
+            {
+                passenger.position += movement;
+            }
+        }
+
+        lastPosition = transform.position;
+
+        // Check distance from start
         if (Mathf.Abs(transform.position.x - startPos.x) >= distance)
         {
-            // flip direction
             direction *= -1;
         }
     }
@@ -33,8 +44,10 @@ public class MovingPlatform : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // make player a child so they ride the platform
-            collision.transform.SetParent(transform);
+            if (!passengersOnPlatform.Contains(collision.transform))
+            {
+                passengersOnPlatform.Add(collision.transform);
+            }
         }
     }
 
@@ -42,8 +55,7 @@ public class MovingPlatform : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // detach player when leaving
-            collision.transform.SetParent(null);
+            passengersOnPlatform.Remove(collision.transform);
         }
     }
 }
