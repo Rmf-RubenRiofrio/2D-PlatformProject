@@ -1,61 +1,36 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class MovingPlatform : MonoBehaviour
 {
     public float distance = 3f;
     public float speed = 2f;
-    private Vector3 startPos;
+
+    private Rigidbody2D rb;
+    private Vector2 startPos;
     private int direction = 1;
-    private Vector3 lastPosition;
-    private List<Transform> passengersOnPlatform = new List<Transform>();
 
     void Start()
     {
-        startPos = transform.position;
-        lastPosition = transform.position;
+        rb = GetComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic; 
+        rb.useFullKinematicContacts = true;
+
+        startPos = rb.position;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        // Calculate movement
-        Vector3 movement = Vector3.right * direction * speed * Time.deltaTime;
-        transform.Translate(movement);
+        // Move platform using kinematic velocity
+        Vector2 velocity = new Vector2(direction * speed, 0f);
+        rb.linearVelocity = velocity;
 
-        // Move passengers
-        foreach (Transform passenger in passengersOnPlatform)
-        {
-            if (passenger != null)
-            {
-                passenger.position += movement;
-            }
-        }
+        // Flip direction at patrol bounds
+        float offset = rb.position.x - startPos.x;
 
-        lastPosition = transform.position;
+        if (direction > 0 && offset >= distance)
+            direction = -1;
 
-        // Check distance from start
-        if (Mathf.Abs(transform.position.x - startPos.x) >= distance)
-        {
-            direction *= -1;
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (!passengersOnPlatform.Contains(collision.transform))
-            {
-                passengersOnPlatform.Add(collision.transform);
-            }
-        }
-    }
-
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            passengersOnPlatform.Remove(collision.transform);
-        }
+        if (direction < 0 && offset <= -distance)
+            direction = 1;
     }
 }
