@@ -77,4 +77,11 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "BouncePad") {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce * 1.75f);
+        }
+    }
 }
