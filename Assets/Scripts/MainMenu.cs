@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+
     public GameObject startMainMenu;
     public GameObject levelSelect;
     public void StartGame(string sceneName)
@@ -15,6 +16,13 @@ public class MainMenu : MonoBehaviour
         startMainMenu.SetActive(false);
         levelSelect.SetActive(true);
     }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene("MainScene");
+        Time.timeScale = 1;
+    }
+
 
     public void QuitGame() {
         Application.Quit();
