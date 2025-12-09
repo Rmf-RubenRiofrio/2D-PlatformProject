@@ -6,6 +6,7 @@ public class Coin : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
+            SoundManager.Instance.PlaySFX("COIN", 0.4f);
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             player.coins += 1;
             Destroy(gameObject);
