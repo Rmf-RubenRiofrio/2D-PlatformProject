@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
             // Set vertical velocity to jumpForce (launch upward).
             // Horizontal velocity stays the same.
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            SoundManager.Instance.PlaySFX("JUMP", 0.4f);
         }
         SetAnimation(moveInput); // call animation logic based on movement & jump state
     }

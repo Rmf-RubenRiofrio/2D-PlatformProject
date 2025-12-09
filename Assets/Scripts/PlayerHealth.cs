@@ -28,6 +28,7 @@ public class PlayerHealth : MonoBehaviour
         health -= damageAmount; // subtract damage amount
         UpdateHealthBar();
         StartCoroutine(BlinkRed()); // briefly flash red
+        SoundManager.Instance.PlaySFX("HURT");
 
         // If health reaches zero or below, call Die()
         if (health <= 0)
@@ -55,6 +56,6 @@ public class PlayerHealth : MonoBehaviour
     // Reload the scene when the Player dies
     private void Die()
     {
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
