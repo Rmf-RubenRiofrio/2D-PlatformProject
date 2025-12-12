@@ -6,7 +6,6 @@ public class PlayerHealth : MonoBehaviour
 {
     // Starting health value for the Player
     public int health = 100;
-
     // Amount of damage the Player takes when hit
     public int damageAmount = 25;
 
@@ -56,6 +55,29 @@ public class PlayerHealth : MonoBehaviour
     // Reload the scene when the Player dies
     private void Die()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Strawberry"))
+        {
+            // Get the DoubleJump script attached to the same Player
+            DoubleJump dj = GetComponent<DoubleJump>();
+
+            if (dj != null)
+            {
+                dj.extraJumpsValue = 2; // sets max jumps to 2 (triple jump)
+            }
+
+            Destroy(collision.gameObject);
+        }
+    }
+
+    public void Update()
+    {
+        if(transform.position.y < -15f)
+        {
+            Die();
+        }
     }
 }
